@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="D&D Forge">
+    <link rel="apple-touch-icon" href="icon512.png">
+
+    <title>Fiery D&D Creation Forge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+/* GLOBAL BACKGROUND */
+body {
+    margin: 0;
+    font-family: "Georgia", serif;
+    background: radial-gradient(circle at top, #000000 0%, #2a0000 40%, #660000 80%);
+    background-size: 200%;
+    animation: bgShift 18s ease-in-out infinite, fadeIn 1.5s ease;
+    color: #fff2e0;
+}
+
+/* BACKGROUND ANIMATION */
+@keyframes bgShift {
+    0% { background-position: 50% 0%; }
+    50% { background-position: 50% 100%; }
+    100% { background-position: 50% 0%; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* HEADER */
+@keyframes emberPulse {
+    0%, 100% { text-shadow: 0 0 10px #ff2e2e, 0 0 20px #b30000; }
+    50% { text-shadow: 0 0 14px #ff5e5e, 0 0 28px #ff2e2e; }
+}
+
+header {
+    background: linear-gradient(180deg, #000000 0%, #2a0000 100%);
+    padding: 16px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffffff; /* bright white text */
+    letter-spacing: 1.5px;
+    border-bottom: 3px solid #ff0000;
+    animation: emberPulse 3s infinite ease-in-out;
+}
+<div class="nav-toggle">☰ Menu</div>
+<div class="nav-bar">
+    <!-- your existing nav buttons -->
+</div>
+/* NAV BAR */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 95%;
+    z-index: 1000;
+    background: #000000;
+    border-bottom: 2px solid #ff0000;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 0 10px #330000;
+    transition: top 0.4s ease-in-out; /* smooth hide/reveal */
+}
+
+/* BUTTONS */
+button {
+    background: linear-gradient(135deg, #660000, #330000);
+    color: #fff2e0;
+    border: 2px solid #ff0000;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: 0.2s ease;
+    box-shadow: 0 0 8px #330000;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #990000, #440000);
+    box-shadow: 0 0 12px #ff0000;
+    transform: scale(1.05);
+}
+
+/* PANELS */
+.panel {
+    background: #121212;
+    border: 2px solid #660000;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #330000;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+/* INPUTS */
+input, select, textarea {
+    background: #0d0d0d;
+    border: 2px solid #660000;
+    color: #ffcccc;
+    border-radius: 6px;
+    padding: 8px;
+    box-shadow: inset 0 0 6px #330000;
+    transition: 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #ff2e2e;
+    box-shadow: 0 0 8px #ff0000;
+}
+
+/* TEXT */
+h2, h3, label {
+    color: #ffffff;
+    text-shadow: 0 0 6px #ff2e2e;
+}
+
+p, span {
+    color: #b0b0b0;
+}
+
+/* OUTPUT BOX */
+.output-box {
+    background: #0d0000;
+    border: 2px solid #ff0000;
+    color: #fff2e0;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px #330000;
+    white-space: pre-wrap;
+}
+/* RESPONSIVE DESIGN FOR MOBILE */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    header {
+        font-size: 22px;
+        padding: 12px;
+    }
+
+    .nav-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .panel {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    input, select, textarea, button {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    h2, h3, label {
+        font-size: 16px;
+    }
+
+    .output-box {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
+    </style>
+</head>
+
+<body>
+<header>Fiery D&D Creation Forge</header>
+
+<!-- FIXED FIERY NAV BAR -->
+<div class="nav-bar">
+    <button class="nav-btn active" data-page="classPage">
+        <span class="icon">🛡</span><span>Class Builder</span>
+    </button>
+    <button class="nav-btn" data-page="racePage">
+        <span class="icon">🧬</span><span>Race Builder</span>
+    </button>
+    <button class="nav-btn" data-page="spellPage">
+        <span class="icon">✨</span><span>Spell Builder</span>
+    </button>
+    <button class="nav-btn" data-page="EntityPage">
+        <span class="icon">🐲</span><span>Entity creator</span>
+    </button>
+    <button class="nav-btn" data-page="savedPage">
+        <span class="icon">📦</span><span>Saved Creations</span>
+    </button>
+</div>
+
+<!-- CLASS PAGE -->
+<div id="classPage" class="page">
+    <div class="container">
+        <div class="panel">
+            <h2>🛡 Class Builder</h2>
+
+            <label>Class Name</label>
+            <input id="cls_name">
+
+            <label>Role</label>
+            <select id="cls_role" onchange="classRoleChanged()">
+                <option value="">Select role</option>
+                <option>Warrior</option>
+                <option>Mage</option>
+                <option>Rogue</option>
+                <option>Cleric</option>
+                <option>Druid</option>
+                <option>Paladin</option>
+                <option>Ranger</option>
+                <option>Barbarian</option>
+                <option>Sorcerer</option>
+                <option>Assassin</option>
+                <option>Tank</option>
+                <option>Support</option>
+                <option>Healer</option>
+                <option>Striker</option>
+                <option>Controller</option>
+                <option>Caster</option>
+                <option>Martial</option>
+                <option>Summoner</option>
+                <option value="custom">Custom</option>
+            </select>
+
+            <input id="cls_role_custom" class="hidden" placeholder="Custom role">
+
+            <label>Hit Die</label>
+            <select id="cls_hitdie">
+                <option>d6</option>
+                <option>d8</option>
+                <option>d10</option>
+                <option>d12</option>
+            </select>
+
+            <label>Primary Abilities</label>
+            <input id="cls_abilities" placeholder="e.g., STR, CON">
+
+            <label>Proficiencies (comma separated)</label>
+            <textarea id="cls_profs"></textarea>
+
+            <h3>Features by Level</h3>
+            <div class="two-col">
+                <div>
+                    <label>Level</label>
+                    <input id="cls_feat_level" type="number" min="1" max="20">
+                </div>
+                <div>
+                    <label>Feature Name</label>
+                    <input id="cls_feat_name">
+                </div>
+            </div>
+            <button onclick="addClassFeature()">Add Feature</button>
+
+            <h3>Subclass</h3>
+            <label>Subclass Name</label>
+            <input id="cls_sub_name">
+            <label>Subclass Features (one per line, format: level: feature)</label>
+            <textarea id="cls_sub_feats"></textarea>
+            <button onclick="addSubclass()">Add Subclass</button>
+
+            <button onclick="generateClass()">Generate Class</button>
+            <button onclick="saveClass()">Save Class</button>
+            <button onclick="loadClass()">Load Class</button>
+            <button onclick="window.print()">Print</button>
+        </div>
+
+        <div class="panel">
+            <h2>Class Preview</h2>
+            <div id="classOutput" class="output-box"></div>
+        </div>
+    </div>
+</div>
+
+<!-- RACE PAGE -->
+<div id="racePage" class="page hidden">
+    <div class="container">
+        <div class="panel">
+            <h2>🧬 Race Builder</h2>
+
+            <label>Race Name</label>
+            <input id="race_name">
+
+            <label>Ability Score Bonuses</label>
+            <input id="race_as">
+
+            <label>Size</label>
+            <select id="race_size">
+                <option>Small</option>
+                <option>Medium</option>
+                <option>Large</option>
+            </select>
+
+            <label>Speed (ft.)</label>
+            <input id="race_speed" type="number" value="30">
+
+            <label>Languages</label>
+            <input id="race_lang">
+
+            <h3>Racial Traits</h3>
+            <textarea id="race_traits" placeholder="One trait per line"></textarea>
+
+            <h3>Subrace (optional)</h3>
+            <label>Subrace Name</label>
+            <input id="race_sub_name">
+            <label>Subrace Traits</label>
+            <textarea id="race_sub_traits" placeholder="One trait per line"></textarea>
+
+            <button onclick="generateRace()">Generate Race</button>
+            <button onclick="saveRace()">Save Race</button>
+            <button onclick="loadRace()">Load Race</button>
+        </div>
+
+        <div class="panel">
+            <h2>Race Preview</h2>
+            <div id="raceOutput" class="output-box"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SPELL PAGE (ADVANCED, TWO-COLUMN) -->
+<div id="spellPage" class="page hidden">
+    <div class="container">
+        <div class="panel">
+            <h2>✨ Spell Builder</h2>
+
+            <div class="two-col">
+                <div>
+                    <label>Spell Name</label>
+                    <input id="spell_name">
+                </div>
+                <div>
+                    <label>Level</label>
+                    <select id="spell_level">
+                        <option>Cantrip</option>
+                        <option>1</option><option>2</option><option>3</option>
+                        <option>4</option><option>5</option><option>6</option>
+                        <option>7</option><option>8</option><option>9</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>School</label>
+                    <select id="spell_school">
+                        <option>Abjuration</option>
+                        <option>Conjuration</option>
+                        <option>Divination</option>
+                        <option>Enchantment</option>
+                        <option>Evocation</option>
+                        <option>Illusion</option>
+                        <option>Necromancy</option>
+                        <option>Transmutation</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Casting Time</label>
+                    <input id="spell_cast_time" placeholder="e.g., 1 action">
+                </div>
+
+                <div>
+                    <label>Range</label>
+                    <input id="spell_range" placeholder="e.g., 60 feet">
+                </div>
+                <div>
+                    <label>Duration</label>
+                    <input id="spell_duration" placeholder="e.g., Concentration, up to 1 minute">
+                </div>
+
+                <div>
+                    <label>Components</label>
+                    <input id="spell_components" placeholder="V, S, M">
+                </div>
+                <div>
+                    <label>Material Components</label>
+                    <input id="spell_material" placeholder="Optional description">
+                </div>
+
+                <div>
+                    <label>Concentration</label>
+                    <select id="spell_concentration">
+                        <option>No</option>
+                        <option>Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Ritual</label>
+                    <select id="spell_ritual">
+                        <option>No</option>
+                        <option>Yes</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Saving Throw</label>
+                    <input id="spell_save" placeholder="e.g., Dex save">
+                </div>
+                <div>
+                    <label>Damage Type</label>
+                    <input id="spell_damage" placeholder="e.g., Fire">
+                </div>
+
+                <div class="full-width">
+                    <label>Classes</label>
+                    <input id="spell_classes" placeholder="e.g., Wizard, Sorcerer">
+                </div>
+
+                <div class="full-width">
+                    <label>Description</label>
+                    <textarea id="spell_desc"></textarea>
+                </div>
+
+                <div class="full-width">
+                    <label>At Higher Levels</label>
+                    <textarea id="spell_higher"></textarea>
+                </div>
+            </div>
+
+            <button onclick="generateSpell()">Generate Spell</button>
+            <button onclick="saveSpell()">Save Spell</button>
+            <button onclick="loadSpell()">Load Spell</button>
+        </div>
+
+        <div class="panel">
+            <h2>Spell Preview</h2>
+            <div id="spellOutput" class="output-box"></div>
+        </div>
+    </div>
+</div>
+
+<!-- MONSTER PAGE (ADVANCED, TWO-COLUMN) -->
+<div id="EntityPage" class="page hidden">
+    <div class="container">
+        <div class="panel">
+            <h2>🐲 Entity creator</h2>
+
+            <div class="two-col">
+                <div>
+                    <label>Name</label>
+                    <input id="mon_name">
+                </div>
+                <div>
+                    <label>Size</label>
+                    <input id="mon_size" placeholder="e.g., Large">
+                </div>
+
+                <div>
+                    <label>Type</label>
+                    <input id="mon_type" placeholder="e.g., Dragon">
+                </div>
+                <div>
+                    <label>Alignment</label>
+                    <input id="mon_align" placeholder="e.g., Chaotic Evil">
+                </div>
+
+                <div>
+                    <label>Armour Class</label>
+                    <input id="mon_ac" type="number">
+                </div>
+                <div>
+                    <label>Hit Points</label>
+                    <input id="mon_hp" placeholder="e.g., 200 (16d12 + 96)">
+                </div>
+
+                <div>
+                    <label>Speed</label>
+                    <input id="mon_speed" placeholder="e.g., 40 ft., fly 80 ft.">
+                </div>
+                <div>
+                    <label>STR</label>
+                    <input id="mon_str" type="number">
+                </div>
+
+                <div>
+                    <label>DEX</label>
+                    <input id="mon_dex" type="number">
+                </div>
+                <div>
+                    <label>CON</label>
+                    <input id="mon_con" type="number">
+                </div>
+
+                <div>
+                    <label>INT</label>
+                    <input id="mon_int" type="number">
+                </div>
+                <div>
+                    <label>WIS</label>
+                    <input id="mon_wis" type="number">
+                </div>
+
+                <div>
+                    <label>CHA</label>
+                    <input id="mon_cha" type="number">
+                </div>
+                <div>
+                    <label>Saving Throws</label>
+                    <input id="mon_saves" placeholder="e.g., Dex +7, Wis +5">
+                </div>
+
+                <div>
+                    <label>Skills</label>
+                    <input id="mon_skills" placeholder="e.g., Perception +10">
+                </div>
+                <div>
+                    <label>Damage Resistances</label>
+                    <input id="mon_resist" placeholder="e.g., fire, cold">
+                </div>
+
+                <div>
+                    <label>Damage Immunities</label>
+                    <input id="mon_immune" placeholder="e.g., poison">
+                </div>
+                <div>
+                    <label>Condition Immunities</label>
+                    <input id="mon_cond_immune" placeholder="e.g., frightened">
+                </div>
+
+                <div>
+                    <label>Senses</label>
+                    <input id="mon_senses" placeholder="e.g., darkvision 120 ft.">
+                </div>
+                <div>
+                    <label>Languages</label>
+                    <input id="mon_lang" placeholder="e.g., Draconic, Common">
+                </div>
+
+                <div>
+                    <label>Challenge Rating</label>
+                    <input id="mon_cr" placeholder="e.g., 17 (18,000 XP)">
+                </div>
+
+                <div class="full-width">
+                    <label>Traits</label>
+                    <textarea id="mon_traits" placeholder="One trait per line"></textarea>
+                </div>
+
+                <div class="full-width">
+                    <label>Actions</label>
+                    <textarea id="mon_actions" placeholder="One action per line"></textarea>
+                </div>
+
+                <div class="full-width">
+                    <label>Legendary Actions (optional)</label>
+                    <textarea id="mon_legendary" placeholder="One legendary action per line"></textarea>
+                </div>
+            </div>
+
+            <button onclick="generateentity()">Generate Entity</button>
+            <button onclick="saveentity()">Save entity</button>
+            <button onclick="loadentity()">Load entity</button>
+        </div>
+
+        <div class="panel">
+            <h2>Entity preview</h2>
+            <div id="monsterOutput" class="output-box"></div>
+        </div>
+    </div>
+</div>
+
+<!-- SAVED CREATIONS PAGE -->
+<div id="savedPage" class="page hidden">
+    <div class="container">
+        <div class="panel">
+            <h2>📦 Saved Classes</h2>
+            <div id="savedClasses" class="saved-list"></div>
+        </div>
+        <div class="panel">
+            <h2>📦 Saved Races</h2>
+            <div id="savedRaces" class="saved-list"></div>
+        </div>
+        <div class="panel">
+            <h2>📦 Saved Spells</h2>
+            <div id="savedSpells" class="saved-list"></div>
+        </div>
+        <div class="panel">
+            <h2>📦 Saved Monsters</h2>
+            <div id="savedMonsters" class="saved-list"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* NAVIGATION */
+    const pages = ["classPage", "racePage", "spellPage", "monsterPage", "savedPage"];
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const target = btn.getAttribute("data-page");
+            pages.forEach(id => {
+                document.getElementById(id).classList.toggle("hidden", id !== target);
+            });
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            if (target === "savedPage") refreshSavedLists();
+        });
+    });
+
+    /* CLASS BUILDER */
+    let classFeatures = {};
+    let classSubclasses = {};
+
+    function classRoleChanged() {
+        const roleSel = document.getElementById("cls_role");
+        const custom = document.getElementById("cls_role_custom");
+        if (roleSel.value === "custom") custom.classList.remove("hidden");
+        else custom.classList.add("hidden");
+    }
+
+    function addClassFeature() {
+        const lvl = document.getElementById("cls_feat_level").value;
+        const name = document.getElementById("cls_feat_name").value.trim();
+        if (!lvl || !name) return alert("Enter level and feature name.");
+        if (!classFeatures[lvl]) classFeatures[lvl] = [];
+        classFeatures[lvl].push(name);
+        document.getElementById("cls_feat_name").value = "";
+        alert("Feature added.");
+    }
+
+    function addSubclass() {
+        const name = document.getElementById("cls_sub_name").value.trim();
+        const raw = document.getElementById("cls_sub_feats").value.split("\n");
+        if (!name) return alert("Enter subclass name.");
+        let parsed = {};
+        raw.forEach(line => {
+            const parts = line.split(":");
+            if (parts.length === 2) {
+                const lvl = parts[0].trim();
+                const feat = parts[1].trim();
+                if (!parsed[lvl]) parsed[lvl] = [];
+                parsed[lvl].push(feat);
+            }
+        });
+        classSubclasses[name] = parsed;
+        alert("Subclass added.");
+    }
+
+    function generateClass() {
+        const name = document.getElementById("cls_name").value || "Unnamed Class";
+        const roleSel = document.getElementById("cls_role").value;
+        const customRole = document.getElementById("cls_role_custom").value;
+        const role = roleSel === "custom" ? (customRole || "Custom") : (roleSel || "Unknown");
+        const hitdie = document.getElementById("cls_hitdie").value;
+        const abilities = document.getElementById("cls_abilities").value;
+        const profs = document.getElementById("cls_profs").value;
+
+        let text = `=== ${name} ===\n`;
+        text += `Role: ${role}\n`;
+        text += `Hit Die: ${hitdie}\n`;
+        text += `Primary Abilities: ${abilities}\n\n`;
+
+        text += `--- Proficiencies ---\n`;
+        profs.split(",").forEach(p => {
+            if (p.trim()) text += `• ${p.trim()}\n`;
+        });
+
+        text += `\n--- Features by Level ---\n`;
+        const levels = Object.keys(classFeatures).sort((a,b)=>Number(a)-Number(b));
+        levels.forEach(lvl => {
+            text += `Level ${lvl}: ${classFeatures[lvl].join(", ")}\n`;
+        });
+
+        text += `\n--- Subclasses ---\n`;
+        Object.keys(classSubclasses).forEach(sub => {
+            text += `\n${sub}:\n`;
+            const subLevels = Object.keys(classSubclasses[sub]).sort((a,b)=>Number(a)-Number(b));
+            subLevels.forEach(lvl => {
+                text += `  Level ${lvl}: ${classSubclasses[sub][lvl].join(", ")}\n`;
+            });
+        });
+
+        document.getElementById("classOutput").textContent = text;
+    }
+
+    function saveClass() {
+        const data = {
+            name: document.getElementById("cls_name").value,
+            role: document.getElementById("cls_role").value,
+            customRole: document.getElementById("cls_role_custom").value,
+            hitdie: document.getElementById("cls_hitdie").value,
+            abilities: document.getElementById("cls_abilities").value,
+            profs: document.getElementById("cls_profs").value,
+            features: classFeatures,
+            subclasses: classSubclasses
+        };
+        let list = JSON.parse(localStorage.getItem("classes") || "[]");
+        list.push(data);
+        localStorage.setItem("classes", JSON.stringify(list));
+        alert("Class saved.");
+    }
+
+    function loadClass() {
+        const list = JSON.parse(localStorage.getItem("classes") || "[]");
+        if (!list.length) return alert("No saved classes.");
+        const data = list[list.length - 1];
+        document.getElementById("cls_name").value = data.name || "";
+        document.getElementById("cls_role").value = data.role || "";
+        document.getElementById("cls_role_custom").value = data.customRole || "";
+        document.getElementById("cls_hitdie").value = data.hitdie || "d8";
+        document.getElementById("cls_abilities").value = data.abilities || "";
+        document.getElementById("cls_profs").value = data.profs || "";
+        classFeatures = data.features || {};
+        classSubclasses = data.subclasses || {};
+        classRoleChanged();
+        generateClass();
+        alert("Last saved class loaded.");
+    }
+
+    /* RACE BUILDER */
+    function generateRace() {
+        const name = document.getElementById("race_name").value || "Unnamed Race";
+        const as = document.getElementById("race_as").value;
+        const size = document.getElementById("race_size").value;
+        const speed = document.getElementById("race_speed").value;
+        const lang = document.getElementById("race_lang").value;
+        const traits = document.getElementById("race_traits").value.split("\n");
+        const subName = document.getElementById("race_sub_name").value.trim();
+        const subTraits = document.getElementById("race_sub_traits").value.split("\n");
+
+        let out = `=== ${name} ===\n`;
+        out += `Ability Score Bonuses: ${as}\n`;
+        out += `Size: ${size}\n`;
+        out += `Speed: ${speed} ft.\n`;
+        out += `Languages: ${lang}\n\n`;
+
+        out += `--- Racial Traits ---\n`;
+        traits.forEach(t => { if (t.trim()) out += `• ${t.trim()}\n`; });
+
+        if (subName) {
+            out += `\n--- Subrace: ${subName} ---\n`;
+            subTraits.forEach(t => { if (t.trim()) out += `• ${t.trim()}\n`; });
+        }
+
+        document.getElementById("raceOutput").textContent = out;
+    }
+
+    function saveRace() {
+        const data = {
+            name: document.getElementById("race_name").value,
+            as: document.getElementById("race_as").value,
+            size: document.getElementById("race_size").value,
+            speed: document.getElementById("race_speed").value,
+            lang: document.getElementById("race_lang").value,
+            traits: document.getElementById("race_traits").value,
+            subName: document.getElementById("race_sub_name").value,
+            subTraits: document.getElementById("race_sub_traits").value
+        };
+        let list = JSON.parse(localStorage.getItem("races") || "[]");
+        list.push(data);
+        localStorage.setItem("races", JSON.stringify(list));
+        alert("Race saved.");
+    }
+
+    function loadRace() {
+        const list = JSON.parse(localStorage.getItem("races") || "[]");
+        if (!list.length) return alert("No saved races.");
+        const data = list[list.length - 1];
+        document.getElementById("race_name").value = data.name || "";
+        document.getElementById("race_as").value = data.as || "";
+        document.getElementById("race_size").value = data.size || "Medium";
+        document.getElementById("race_speed").value = data.speed || 30;
+        document.getElementById("race_lang").value = data.lang || "";
+        document.getElementById("race_traits").value = data.traits || "";
+        document.getElementById("race_sub_name").value = data.subName || "";
+        document.getElementById("race_sub_traits").value = data.subTraits || "";
+        generateRace();
+        alert("Last saved race loaded.");
+    }
+
+    /* SPELL BUILDER */
+    function generateSpell() {
+        const name = document.getElementById("spell_name").value || "Unnamed Spell";
+        const level = document.getElementById("spell_level").value;
+        const school = document.getElementById("spell_school").value;
+        const cast = document.getElementById("spell_cast_time").value;
+        const range = document.getElementById("spell_range").value;
+        const duration = document.getElementById("spell_duration").value;
+        const comps = document.getElementById("spell_components").value;
+        const material = document.getElementById("spell_material").value;
+        const conc = document.getElementById("spell_concentration").value;
+        const ritual = document.getElementById("spell_ritual").value;
+        const save = document.getElementById("spell_save").value;
+        const dmg = document.getElementById("spell_damage").value;
+        const classes = document.getElementById("spell_classes").value;
+        const desc = document.getElementById("spell_desc").value;
+        const higher = document.getElementById("spell_higher").value;
+
+        let out = `=== ${name} ===\n`;
+        out += `Level: ${level} | School: ${school}\n`;
+        out += `Casting Time: ${cast}\n`;
+        out += `Range: ${range}\n`;
+        out += `Components: ${comps}`;
+        if (material) out += ` (${material})`;
+        out += `\n`;
+        out += `Duration: ${duration}\n`;
+        out += `Concentration: ${conc} | Ritual: ${ritual}\n`;
+        if (save) out += `Saving Throw: ${save}\n`;
+        if (dmg) out += `Damage Type: ${dmg}\n`;
+        if (classes) out += `Classes: ${classes}\n`;
+        out += `\n--- Description ---\n${desc}\n`;
+        if (higher.trim()) out += `\n--- At Higher Levels ---\n${higher}\n`;
+
+        document.getElementById("spellOutput").textContent = out;
+    }
+
+    function saveSpell() {
+        const data = {
+            name: document.getElementById("spell_name").value,
+            level: document.getElementById("spell_level").value,
+            school: document.getElementById("spell_school").value,
+            cast: document.getElementById("spell_cast_time").value,
+            range: document.getElementById("spell_range").value,
+            duration: document.getElementById("spell_duration").value,
+            comps: document.getElementById("spell_components").value,
+            material: document.getElementById("spell_material").value,
+            conc: document.getElementById("spell_concentration").value,
+            ritual: document.getElementById("spell_ritual").value,
+            save: document.getElementById("spell_save").value,
+            dmg: document.getElementById("spell_damage").value,
+            classes: document.getElementById("spell_classes").value,
+            desc: document.getElementById("spell_desc").value,
+            higher: document.getElementById("spell_higher").value
+        };
+        let list = JSON.parse(localStorage.getItem("spells") || "[]");
+        list.push(data);
+        localStorage.setItem("spells", JSON.stringify(list));
+        alert("Spell saved.");
+    }
+
+    function loadSpell() {
+        const list = JSON.parse(localStorage.getItem("spells") || "[]");
+        if (!list.length) return alert("No saved spells.");
+        const data = list[list.length - 1];
+        document.getElementById("spell_name").value = data.name || "";
+        document.getElementById("spell_level").value = data.level || "Cantrip";
+        document.getElementById("spell_school").value = data.school || "Evocation";
+        document.getElementById("spell_cast_time").value = data.cast || "";
+        document.getElementById("spell_range").value = data.range || "";
+        document.getElementById("spell_duration").value = data.duration || "";
+        document.getElementById("spell_components").value = data.comps || "";
+        document.getElementById("spell_material").value = data.material || "";
+        document.getElementById("spell_concentration").value = data.conc || "No";
+        document.getElementById("spell_ritual").value = data.ritual || "No";
+        document.getElementById("spell_save").value = data.save || "";
+        document.getElementById("spell_damage").value = data.dmg || "";
+        document.getElementById("spell_classes").value = data.classes || "";
+        document.getElementById("spell_desc").value = data.desc || "";
+        document.getElementById("spell_higher").value = data.higher || "";
+        generateSpell();
+        alert("Last saved spell loaded.");
+    }
+
+    /* entity creator */
+    function generateMonster() {
+        const name = document.getElementById("mon_name").value || "Unnamed Monster";
+        const size = document.getElementById("mon_size").value;
+        const type = document.getElementById("mon_type").value;
+        const align = document.getElementById("mon_align").value;
+        const ac = document.getElementById("mon_ac").value;
+        const hp = document.getElementById("mon_hp").value;
+        const speed = document.getElementById("mon_speed").value;
+        const str = document.getElementById("mon_str").value;
+        const dex = document.getElementById("mon_dex").value;
+        const con = document.getElementById("mon_con").value;
+        const intv = document.getElementById("mon_int").value;
+        const wis = document.getElementById("mon_wis").value;
+        const cha = document.getElementById("mon_cha").value;
+        const saves = document.getElementById("mon_saves").value;
+        const skills = document.getElementById("mon_skills").value;
+        const resist = document.getElementById("mon_resist").value;
+        const immune = document.getElementById("mon_immune").value;
+        const condImmune = document.getElementById("mon_cond_immune").value;
+        const senses = document.getElementById("mon_senses").value;
+        const lang = document.getElementById("mon_lang").value;
+        const cr = document.getElementById("mon_cr").value;
+        const traits = document.getElementById("mon_traits").value.split("\n");
+        const actions = document.getElementById("mon_actions").value.split("\n");
+        const legendary = document.getElementById("mon_legendary").value.split("\n");
+
+        let out = `=== ${name} ===\n`;
+        out += `${size} ${type}, ${align}\n\n`;
+        out += `Armor Class: ${ac}\n`;
+        out += `Hit Points: ${hp}\n`;
+        out += `Speed: ${speed}\n\n`;
+
+        out += `STR ${str}   DEX ${dex}   CON ${con}\n`;
+        out += `INT ${intv}   WIS ${wis}   CHA ${cha}\n\n`;
+
+        if (saves.trim()) out += `Saving Throws: ${saves}\n`;
+        if (skills.trim()) out += `Skills: ${skills}\n`;
+        if (resist.trim()) out += `Damage Resistances: ${resist}\n`;
+        if (immune.trim()) out += `Damage Immunities: ${immune}\n`;
+        if (condImmune.trim()) out += `Condition Immunities: ${condImmune}\n`;
+        if (senses.trim()) out += `Senses: ${senses}\n`;
+        if (lang.trim()) out += `Languages: ${lang}\n`;
+        if (cr.trim()) out += `Challenge: ${cr}\n`;
+
+        out += `\n--- Traits ---\n`;
+        traits.forEach(t => { if (t.trim()) out += `• ${t.trim()}\n`; });
+
+        out += `\n--- Actions ---\n`;
+        actions.forEach(a => { if (a.trim()) out += `• ${a.trim()}\n`; });
+
+        if (legendary.some(l => l.trim())) {
+            out += `\n--- Legendary Actions ---\n`;
+            legendary.forEach(l => { if (l.trim()) out += `• ${l.trim()}\n`; });
+        }
+
+        document.getElementById("monsterOutput").textContent = out;
+    }
+
+    function saveMonster() {
+        const data = {
+            name: document.getElementById("mon_name").value,
+            size: document.getElementById("mon_size").value,
+            type: document.getElementById("mon_type").value,
+            align: document.getElementById("mon_align").value,
+            ac: document.getElementById("mon_ac").value,
+            hp: document.getElementById("mon_hp").value,
+            speed: document.getElementById("mon_speed").value,
+            str: document.getElementById("mon_str").value,
+            dex: document.getElementById("mon_dex").value,
+            con: document.getElementById("mon_con").value,
+            intv: document.getElementById("mon_int").value,
+            wis: document.getElementById("mon_wis").value,
+            cha: document.getElementById("mon_cha").value,
+            saves: document.getElementById("mon_saves").value,
+            skills: document.getElementById("mon_skills").value,
+            resist: document.getElementById("mon_resist").value,
+            immune: document.getElementById("mon_immune").value,
+            condImmune: document.getElementById("mon_cond_immune").value,
+            senses: document.getElementById("mon_senses").value,
+            lang: document.getElementById("mon_lang").value,
+            cr: document.getElementById("mon_cr").value,
+            traits: document.getElementById("mon_traits").value,
+            actions: document.getElementById("mon_actions").value,
+            legendary: document.getElementById("mon_legendary").value
+        };
+        let list = JSON.parse(localStorage.getItem("monsters") || "[]");
+        list.push(data);
+        localStorage.setItem("monsters", JSON.stringify(list));
+        alert("Monster saved.");
+    }
+
+    function loadMonster() {
+        const list = JSON.parse(localStorage.getItem("monsters") || "[]");
+        if (!list.length) return alert("No saved monsters.");
+        const data = list[list.length - 1];
+        document.getElementById("mon_name").value = data.name || "";
+        document.getElementById("mon_size").value = data.size || "";
+        document.getElementById("mon_type").value = data.type || "";
+        document.getElementById("mon_align").value = data.align || "";
+        document.getElementById("mon_ac").value = data.ac || "";
+        document.getElementById("mon_hp").value = data.hp || "";
+        document.getElementById("mon_speed").value = data.speed || "";
+        document.getElementById("mon_str").value = data.str || "";
+        document.getElementById("mon_dex").value = data.dex || "";
+        document.getElementById("mon_con").value = data.con || "";
+        document.getElementById("mon_int").value = data.intv || "";
+        document.getElementById("mon_wis").value = data.wis || "";
+        document.getElementById("mon_cha").value = data.cha || "";
+        document.getElementById("mon_saves").value = data.saves || "";
+        document.getElementById("mon_skills").value = data.skills || "";
+        document.getElementById("mon_resist").value = data.resist || "";
+        document.getElementById("mon_immune").value = data.immune || "";
+        document.getElementById("mon_cond_immune").value = data.condImmune || "";
+        document.getElementById("mon_senses").value = data.senses || "";
+        document.getElementById("mon_lang").value = data.lang || "";
+        document.getElementById("mon_cr").value = data.cr || "";
+        document.getElementById("mon_traits").value = data.traits || "";
+        document.getElementById("mon_actions").value = data.actions || "";
+        document.getElementById("mon_legendary").value = data.legendary || "";
+        generateMonster();
+        alert("Last saved monster loaded.");
+    }
+
+    /* SAVED CREATIONS PAGE */
+    function refreshSavedLists() {
+        const clsDiv = document.getElementById("savedClasses");
+        const raceDiv = document.getElementById("savedRaces");
+        const spellDiv = document.getElementById("savedSpells");
+        const monDiv = document.getElementById("savedMonsters");
+
+        const classes = JSON.parse(localStorage.getItem("classes") || "[]");
+        const races = JSON.parse(localStorage.getItem("races") || "[]");
+        const spells = JSON.parse(localStorage.getItem("spells") || "[]");
+        const monsters = JSON.parse(localStorage.getItem("monsters") || "[]");
+
+        clsDiv.innerHTML = "";
+        raceDiv.innerHTML = "";
+        spellDiv.innerHTML = "";
+        monDiv.innerHTML = "";
+
+        classes.forEach((c, idx) => {
+            const row = document.createElement("div");
+            row.className = "saved-item";
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "name";
+            nameSpan.textContent = c.name || `Class #${idx+1}`;
+            const loadBtn = document.createElement("button");
+            loadBtn.textContent = "Load";
+            loadBtn.onclick = () => {
+                document.getElementById("cls_name").value = c.name || "";
+                document.getElementById("cls_role").value = c.role || "";
+                document.getElementById("cls_role_custom").value = c.customRole || "";
+                document.getElementById("cls_hitdie").value = c.hitdie || "d8";
+                document.getElementById("cls_abilities").value = c.abilities || "";
+                document.getElementById("cls_profs").value = c.profs || "";
+                classFeatures = c.features || {};
+                classSubclasses = c.subclasses || {};
+                classRoleChanged();
+                generateClass();
+                alert("Class loaded from Saved.");
+            };
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.onclick = () => {
+                classes.splice(idx, 1);
+                localStorage.setItem("classes", JSON.stringify(classes));
+                refreshSavedLists();
+            };
+            row.appendChild(nameSpan);
+            row.appendChild(loadBtn);
+            row.appendChild(delBtn);
+            clsDiv.appendChild(row);
+        });
+
+        races.forEach((r, idx) => {
+            const row = document.createElement("div");
+            row.className = "saved-item";
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "name";
+            nameSpan.textContent = r.name || `Race #${idx+1}`;
+            const loadBtn = document.createElement("button");
+            loadBtn.textContent = "Load";
+            loadBtn.onclick = () => {
+                document.getElementById("race_name").value = r.name || "";
+                document.getElementById("race_as").value = r.as || "";
+                document.getElementById("race_size").value = r.size || "Medium";
+                document.getElementById("race_speed").value = r.speed || 30;
+                document.getElementById("race_lang").value = r.lang || "";
+                document.getElementById("race_traits").value = r.traits || "";
+                document.getElementById("race_sub_name").value = r.subName || "";
+                document.getElementById("race_sub_traits").value = r.subTraits || "";
+                generateRace();
+                alert("Race loaded from Saved.");
+            };
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.onclick = () => {
+                races.splice(idx, 1);
+                localStorage.setItem("races", JSON.stringify(races));
+                refreshSavedLists();
+            };
+            row.appendChild(nameSpan);
+            row.appendChild(loadBtn);
+            row.appendChild(delBtn);
+            raceDiv.appendChild(row);
+        });
+
+        spells.forEach((s, idx) => {
+            const row = document.createElement("div");
+            row.className = "saved-item";
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "name";
+            nameSpan.textContent = s.name || `Spell #${idx+1}`;
+            const loadBtn = document.createElement("button");
+            loadBtn.textContent = "Load";
+            loadBtn.onclick = () => {
+                document.getElementById("spell_name").value = s.name || "";
+                document.getElementById("spell_level").value = s.level || "Cantrip";
+                document.getElementById("spell_school").value = s.school || "Evocation";
+                document.getElementById("spell_cast_time").value = s.cast || "";
+                document.getElementById("spell_range").value = s.range || "";
+                document.getElementById("spell_duration").value = s.duration || "";
+                document.getElementById("spell_components").value = s.comps || "";
+                document.getElementById("spell_material").value = s.material || "";
+                document.getElementById("spell_concentration").value = s.conc || "No";
+                document.getElementById("spell_ritual").value = s.ritual || "No";
+                document.getElementById("spell_save").value = s.save || "";
+                document.getElementById("spell_damage").value = s.dmg || "";
+                document.getElementById("spell_classes").value = s.classes || "";
+                document.getElementById("spell_desc").value = s.desc || "";
+                document.getElementById("spell_higher").value = s.higher || "";
+                generateSpell();
+                alert("Spell loaded from Saved.");
+            };
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.onclick = () => {
+                spells.splice(idx, 1);
+                localStorage.setItem("spells", JSON.stringify(spells));
+                refreshSavedLists();
+            };
+            row.appendChild(nameSpan);
+            row.appendChild(loadBtn);
+            row.appendChild(delBtn);
+            spellDiv.appendChild(row);
+        });
+
+        monsters.forEach((m, idx) => {
+            const row = document.createElement("div");
+            row.className = "saved-item";
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "name";
+            nameSpan.textContent = m.name || `Monster #${idx+1}`;
+            const loadBtn = document.createElement("button");
+            loadBtn.textContent = "Load";
+            loadBtn.onclick = () => {
+                document.getElementById("mon_name").value = m.name || "";
+                document.getElementById("mon_size").value = m.size || "";
+                document.getElementById("mon_type").value = m.type || "";
+                document.getElementById("mon_align").value = m.align || "";
+                document.getElementById("mon_ac").value = m.ac || "";
+                document.getElementById("mon_hp").value = m.hp || "";
+                document.getElementById("mon_speed").value = m.speed || "";
+                document.getElementById("mon_str").value = m.str || "";
+                document.getElementById("mon_dex").value = m.dex || "";
+                document.getElementById("mon_con").value = m.con || "";
+                document.getElementById("mon_int").value = m.intv || "";
+                document.getElementById("mon_wis").value = m.wis || "";
+                document.getElementById("mon_cha").value = m.cha || "";
+                document.getElementById("mon_saves").value = m.saves || "";
+                document.getElementById("mon_skills").value = m.skills || "";
+                document.getElementById("mon_resist").value = m.resist || "";
+                document.getElementById("mon_immune").value = m.immune || "";
+                document.getElementById("mon_cond_immune").value = m.condImmune || "";
+                document.getElementById("mon_senses").value = m.senses || "";
+                document.getElementById("mon_lang").value = m.lang || "";
+                document.getElementById("mon_cr").value = m.cr || "";
+                document.getElementById("mon_traits").value = m.traits || "";
+                document.getElementById("mon_actions").value = m.actions || "";
+                document.getElementById("mon_legendary").value = m.legendary || "";
+                generateMonster();
+                alert("Monster loaded from Saved.");
+            };
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.onclick = () => {
+                monsters.splice(idx, 1);
+                localStorage.setItem("monsters", JSON.stringify(monsters));
+                refreshSavedLists();
+            };
+            row.appendChild(nameSpan);
+            row.appendChild(loadBtn);
+            row.appendChild(delBtn);
+            monDiv.appendChild(row);
+        });
+    }
+</script>
+<script>
+document.querySelectorAll('.nav-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove 'active' class from all buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+
+        // Show the selected page
+        const pageId = button.getAttribute('data-page');
+        document.getElementById(pageId).style.display = 'block';
+    });
+});
+
+// Show the first page by default
+document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+document.getElementById('classPage').style.display = 'block';
+</script>
+<script>
+// Grab form elements
+const classNameInput = document.querySelector('[name="className"]');
+const roleInput = document.querySelector('[name="role"]');
+const hitDieSelect = document.querySelector('[name="hitDie"]');
+const abilitiesInput = document.querySelector('[name="abilities"]');
+const proficienciesInput = document.querySelector('[name="proficiencies"]');
+
+// Preview box
+const previewBox = document.createElement('div');
+previewBox.classList.add('preview-box');
+previewBox.style.cssText = `
+    background: #1a0000;
+    border: 2px solid #ff0000;
+    color: #fff2e0;
+    padding: 16px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px #330000;
+`;
+document.querySelector('.panel').appendChild(previewBox);
+
+// Update preview dynamically
+function updatePreview() {
+    previewBox.innerHTML = `
+        <h3 style="color:#ff0000;">${classNameInput.value || 'Unnamed Class'}</h3>
+        <p><strong>Role:</strong> ${roleInput.value || 'None selected'}</p>
+        <p><strong>Hit Die:</strong> ${hitDieSelect.value || 'N/A'}</p>
+        <p><strong>Primary Abilities:</strong> ${abilitiesInput.value || 'None'}</p>
+        <p><strong>Proficiencies:</strong> ${proficienciesInput.value || 'None'}</p>
+    `;
+}
+
+// Listen for changes
+[classNameInput, roleInput, hitDieSelect, abilitiesInput, proficienciesInput].forEach(el => {
+    el.addEventListener('input', updatePreview);
+});
+
+// Initialize preview
+updatePreview();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+<script>
+document.querySelectorAll('.nav-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+        const pageId = button.getAttribute('data-page');
+        document.getElementById(pageId).style.display = 'block';
+    });
+});
+
+document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+document.getElementById('classPage').style.display = 'block';
+</script>
+
+<script>
+let lastScrollTop = 0;
+const navBar = document.querySelector('.nav-bar');
+let scrollTimeout;
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Clear previous timeout
+    clearTimeout(scrollTimeout);
+
+    if (currentScroll > lastScrollTop + 15) {
+        // Scrolling down → hide nav bar
+        navBar.style.top = '-300px';
+    } else if (currentScroll < lastScrollTop - 15) {
+        // Scrolling up → show nav bar
+        navBar.style.top = '0';
+    }
+
+    // Add a slight delay before updating lastScrollTop
+    scrollTimeout = setTimeout(() => {
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    }, 10000);
+});
+</script>
+
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+</body>
+</html>
+
+</body>
+</html>
